@@ -24,8 +24,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     
     public DbSet<Recipient> Recipients { get; set; }
     
-    public DbSet<Recipient> Recipients { get; set; }
-    
     public DbSet<Pet> Pets { get; set; }
     
     // When the model (schema) is created, do these things
