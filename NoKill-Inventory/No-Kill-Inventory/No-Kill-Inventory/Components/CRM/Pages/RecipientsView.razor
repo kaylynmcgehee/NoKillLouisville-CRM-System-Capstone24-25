@@ -37,9 +37,9 @@
     }
 </style>
 
-<PageTitle>Customers</PageTitle>
+<PageTitle>Recipients</PageTitle>
 
-<h1>Customers</h1>
+<h1>Recipients</h1>
 
 <div>
     <input type="text" @bind="SearchTerm" class="search-bar" placeholder="Search by name..." />
@@ -54,30 +54,30 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (var customer in FilteredCustomers)
+    @foreach (var recipient in FilteredRecipients)
     {
-        <tr @onclick="() => ToggleCustomerDetails(customer)">
-            <td>@customer.Name</td>
-            <td>@customer.PhoneNumber</td>
-            <td>@customer.Email</td>
+        <tr @onclick="() => ToggleRecipientDetails(recipient)">
+            <td>@recipient.FirstName @recipient.LastName</td>
+            <td>@recipient.PhoneNumber</td>
+            <td>@recipient.Email</td>
         </tr>
-        @if (ExpandedCustomer == customer)
+        @if (ExpandedRecipient == recipient)
         {
             <tr class="expanded-row">
                 <td colspan="3">
                     <div class="details">
                         <h4>Pets</h4>
                         <ul>
-                            @foreach (var pet in customer.Pets)
+                            @if (recipient.Pets != null)
                             {
-                                <li>@pet.Type: @pet.Name</li>
+                                foreach (var pet in recipient.Pets)
+                                {
+                                    <li>@pet.Type: @pet.Name</li>
+                                }
                             }
-                        </ul>
-                        <h4>Food Preferences</h4>
-                        <ul>
-                            @foreach (var food in customer.FoodPreferences)
+                            else
                             {
-                                <li>@food</li>
+                                <li>No pets listed.</li>
                             }
                         </ul>
                     </div>
@@ -89,250 +89,31 @@
 </table>
 
 @code {
-    private List<Customer> Customers { get; set; } = new();
+    private List<Recipient> Recipients { get; set; } = new();
     private string SearchTerm { get; set; } = string.Empty;
-    private Customer? ExpandedCustomer { get; set; }
+    private Recipient? ExpandedRecipient { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        // Example customers
-        Customers = new List<Customer>
-        {
-            new Customer
-            {
-                Name = "Billy",
-                PhoneNumber = "123-456-7890",
-                Email = "billy@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Dog", Name = "Rover" },
-                    new Pet { Type = "Cat", Name = "Whiskers" }
-                },
-                FoodPreferences = new List<string> { "Kibble", "Chicken", "Carrots" }
-            },
-            new Customer
-            {
-                Name = "Bob",
-                PhoneNumber = "987-654-3210",
-                Email = "bob@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Turtle", Name = "Shelly" }
-                },
-                FoodPreferences = new List<string> { "Lettuce", "Cucumber", "Tomatoes" }
-            },
-            new Customer
-            {
-                Name = "Andrew",
-                PhoneNumber = "555-555-5555",
-                Email = "andrew@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Fish", Name = "Nemo" }
-                },
-                FoodPreferences = new List<string> { "Fish Flakes", "Seaweed" }
-            },
-            new Customer
-            {
-                Name = "Billy",
-                PhoneNumber = "123-456-7890",
-                Email = "billy@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Dog", Name = "Rover" },
-                    new Pet { Type = "Cat", Name = "Whiskers" }
-                },
-                FoodPreferences = new List<string> { "Kibble", "Chicken", "Carrots" }
-            },
-            new Customer
-            {
-                Name = "Bob",
-                PhoneNumber = "987-654-3210",
-                Email = "bob@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Turtle", Name = "Shelly" }
-                },
-                FoodPreferences = new List<string> { "Lettuce", "Cucumber", "Tomatoes" }
-            },
-            new Customer
-            {
-                Name = "Andrew",
-                PhoneNumber = "555-555-5555",
-                Email = "andrew@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Fish", Name = "Nemo" }
-                },
-                FoodPreferences = new List<string> { "Fish Flakes", "Seaweed" }
-            },
-            new Customer
-            {
-                Name = "Billy",
-                PhoneNumber = "123-456-7890",
-                Email = "billy@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Dog", Name = "Rover" },
-                    new Pet { Type = "Cat", Name = "Whiskers" }
-                },
-                FoodPreferences = new List<string> { "Kibble", "Chicken", "Carrots" }
-            },
-            new Customer
-            {
-                Name = "Bob",
-                PhoneNumber = "987-654-3210",
-                Email = "bob@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Turtle", Name = "Shelly" }
-                },
-                FoodPreferences = new List<string> { "Lettuce", "Cucumber", "Tomatoes" }
-            },
-            new Customer
-            {
-                Name = "Andrew",
-                PhoneNumber = "555-555-5555",
-                Email = "andrew@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Fish", Name = "Nemo" }
-                },
-                FoodPreferences = new List<string> { "Fish Flakes", "Seaweed" }
-            },
-            new Customer
-            {
-                Name = "Billy",
-                PhoneNumber = "123-456-7890",
-                Email = "billy@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Dog", Name = "Rover" },
-                    new Pet { Type = "Cat", Name = "Whiskers" }
-                },
-                FoodPreferences = new List<string> { "Kibble", "Chicken", "Carrots" }
-            },
-            new Customer
-            {
-                Name = "Bob",
-                PhoneNumber = "987-654-3210",
-                Email = "bob@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Turtle", Name = "Shelly" }
-                },
-                FoodPreferences = new List<string> { "Lettuce", "Cucumber", "Tomatoes" }
-            },
-            new Customer
-            {
-                Name = "Andrew",
-                PhoneNumber = "555-555-5555",
-                Email = "andrew@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Fish", Name = "Nemo" }
-                },
-                FoodPreferences = new List<string> { "Fish Flakes", "Seaweed" }
-            },
-            new Customer
-            {
-                Name = "Billy",
-                PhoneNumber = "123-456-7890",
-                Email = "billy@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Dog", Name = "Rover" },
-                    new Pet { Type = "Cat", Name = "Whiskers" }
-                },
-                FoodPreferences = new List<string> { "Kibble", "Chicken", "Carrots" }
-            },
-            new Customer
-            {
-                Name = "Bob",
-                PhoneNumber = "987-654-3210",
-                Email = "bob@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Turtle", Name = "Shelly" }
-                },
-                FoodPreferences = new List<string> { "Lettuce", "Cucumber", "Tomatoes" }
-            },
-            new Customer
-            {
-                Name = "Andrew",
-                PhoneNumber = "555-555-5555",
-                Email = "andrew@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Fish", Name = "Nemo" }
-                },
-                FoodPreferences = new List<string> { "Fish Flakes", "Seaweed" }
-            },
-            new Customer
-            {
-                Name = "Billy",
-                PhoneNumber = "123-456-7890",
-                Email = "billy@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Dog", Name = "Rover" },
-                    new Pet { Type = "Cat", Name = "Whiskers" }
-                },
-                FoodPreferences = new List<string> { "Kibble", "Chicken", "Carrots" }
-            },
-            new Customer
-            {
-                Name = "Bob",
-                PhoneNumber = "987-654-3210",
-                Email = "bob@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Turtle", Name = "Shelly" }
-                },
-                FoodPreferences = new List<string> { "Lettuce", "Cucumber", "Tomatoes" }
-            },
-            new Customer
-            {
-                Name = "Andrew",
-                PhoneNumber = "555-555-5555",
-                Email = "andrew@example.com",
-                Pets = new List<Pet>
-                {
-                    new Pet { Type = "Fish", Name = "Nemo" }
-                },
-                FoodPreferences = new List<string> { "Fish Flakes", "Seaweed" }
-            },
-        };
+        Recipients = await Context.Recipients
+            .Include(r => r.Pets) // Only include this if Recipient has a Pets nav property
+            .ToListAsync();
     }
 
-    private List<Customer> FilteredCustomers => Customers
-        .Where(c => string.IsNullOrWhiteSpace(SearchTerm) || c.Name.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase))
+    private List<Recipient> FilteredRecipients => Recipients
+        .Where(r => string.IsNullOrWhiteSpace(SearchTerm)
+                    || $"{r.FirstName} {r.LastName}".Contains(SearchTerm, StringComparison.OrdinalIgnoreCase))
         .ToList();
 
-    private void ToggleCustomerDetails(Customer customer)
+    private void ToggleRecipientDetails(Recipient recipient)
     {
-        if (ExpandedCustomer == customer)
+        if (ExpandedRecipient == recipient)
         {
-            ExpandedCustomer = null;
+            ExpandedRecipient = null;
         }
         else
         {
-            ExpandedCustomer = customer;
+            ExpandedRecipient = recipient;
         }
-    }
-
-    public class Customer
-    {
-        public string Name { get; set; } = string.Empty;
-        public string PhoneNumber { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public List<Pet> Pets { get; set; } = new();
-        public List<string> FoodPreferences { get; set; } = new();
-    }
-
-    public class Pet
-    {
-        public string Type { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
     }
 }
